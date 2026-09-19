@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, redirect, url_for
+from flask import Flask, render_template_string
 
 app = Flask(__name__)
 
@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 PRODUCT_NAME = "NEW LIFE"
 PRODUCT_PRICE = "19,99 zł"
+
 PRODUCT_DESCRIPTION = (
     "7-dniowy e-book o budowaniu odwagi, pewności siebie "
     "i robieniu małych kroków w stronę zmian."
@@ -15,14 +16,15 @@ PRODUCT_DESCRIPTION = (
 
 AUTHOR = "Marcel Chrzanowski i Marcel Okoń"
 
+PAYHIP_URL = "https://payhip.com/NEWLIFEMCMO"
+
 
 # ============================================================
-# GŁÓWNY SZABLON STRONY
+# GŁÓWNY SZABLON
 # ============================================================
 
 PAGE = """
 <!DOCTYPE html>
-
 <html lang="pl">
 
 <head>
@@ -37,12 +39,7 @@ content="NEW LIFE — Zbuduj odwagę. Przestań się ukrywać. Zacznij żyć.">
 
 <title>{{ title }} | NEW LIFE</title>
 
-
 <style>
-
-/* ==========================================================
-   PODSTAWOWE
-   ========================================================== */
 
 * {
     box-sizing: border-box;
@@ -78,21 +75,9 @@ a {
     text-decoration: none;
 }
 
-button,
-input {
-    font-family: inherit;
-}
-
-
-/* ==========================================================
-   NAWIGACJA
-   ========================================================== */
-
 .navbar {
     position: sticky;
-
     top: 0;
-
     z-index: 1000;
 
     background:
@@ -107,65 +92,46 @@ input {
 
 .navbar-inner {
     max-width: 1150px;
-
     margin: auto;
-
-    padding:
-        18px 25px;
+    padding: 18px 25px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 }
 
 .logo {
     font-size: 20px;
-
     font-weight: bold;
-
     letter-spacing: 6px;
 }
 
 .nav-links {
     display: flex;
-
     gap: 25px;
 }
 
 .nav-links a {
     color: #999;
-
     font-size: 14px;
-
-    transition: 0.2s;
 }
 
 .nav-links a:hover {
     color: white;
 }
 
-
-/* ==========================================================
-   PRZYCISKI
-   ========================================================== */
-
 .button {
     display: inline-flex;
 
     align-items: center;
-
     justify-content: center;
 
-    padding:
-        16px 28px;
+    padding: 16px 28px;
 
     border-radius: 9px;
+    border: none;
 
     font-weight: bold;
-
-    border: none;
 
     cursor: pointer;
 
@@ -176,34 +142,23 @@ input {
 
 .button-main {
     background: white;
-
     color: black;
 }
 
 .button-main:hover {
     background: #dddddd;
-
-    transform:
-        translateY(-3px);
+    transform: translateY(-3px);
 }
 
 .button-dark {
     background: #161616;
-
-    border:
-        1px solid #444;
-
+    border: 1px solid #444;
     color: white;
 }
 
 .button-dark:hover {
     background: #222;
 }
-
-
-/* ==========================================================
-   HERO
-   ========================================================== */
 
 .hero {
     max-width: 1150px;
@@ -212,8 +167,7 @@ input {
 
     margin: auto;
 
-    padding:
-        90px 25px;
+    padding: 90px 25px;
 
     display: grid;
 
@@ -276,11 +230,6 @@ input {
     margin-top: 35px;
 }
 
-
-/* ==========================================================
-   OKŁADKA
-   ========================================================== */
-
 .book-cover {
     min-height: 560px;
 
@@ -317,9 +266,7 @@ input {
 
 .cover-top {
     color: #888;
-
     letter-spacing: 4px;
-
     font-size: 12px;
 }
 
@@ -349,18 +296,12 @@ input {
     letter-spacing: 2px;
 }
 
-
-/* ==========================================================
-   SEKCJE
-   ========================================================== */
-
 .section {
     max-width: 1050px;
 
     margin: auto;
 
-    padding:
-        110px 25px;
+    padding: 110px 25px;
 }
 
 .section-header {
@@ -370,8 +311,7 @@ input {
 }
 
 .section-header h2 {
-    margin:
-        0 0 20px;
+    margin: 0 0 20px;
 
     font-size:
         clamp(35px, 6vw, 65px);
@@ -388,11 +328,6 @@ input {
 
     font-size: 18px;
 }
-
-
-/* ==========================================================
-   KARTY
-   ========================================================== */
 
 .cards {
     display: grid;
@@ -439,8 +374,7 @@ input {
 }
 
 .card h3 {
-    margin:
-        0 0 15px;
+    margin: 0 0 15px;
 
     font-size: 23px;
 }
@@ -452,11 +386,6 @@ input {
 
     margin: 0;
 }
-
-
-/* ==========================================================
-   7 DNI
-   ========================================================== */
 
 .days {
     display: grid;
@@ -514,11 +443,6 @@ input {
     line-height: 1.6;
 }
 
-
-/* ==========================================================
-   INFORMACJE
-   ========================================================== */
-
 .info-grid {
     display: grid;
 
@@ -551,11 +475,6 @@ input {
 
     line-height: 1.8;
 }
-
-
-/* ==========================================================
-   CENA
-   ========================================================== */
 
 .buy-section {
     padding:
@@ -621,11 +540,6 @@ input {
     margin-top: 20px;
 }
 
-
-/* ==========================================================
-   FAQ
-   ========================================================== */
-
 .faq {
     max-width: 800px;
 
@@ -655,165 +569,6 @@ input {
     margin: 0;
 }
 
-
-/* ==========================================================
-   ZAMÓWIENIE
-   ========================================================== */
-
-.checkout {
-    max-width: 650px;
-
-    margin: auto;
-
-    padding:
-        100px 25px;
-}
-
-.checkout-box {
-    padding:
-        45px;
-
-    border:
-        1px solid #333;
-
-    border-radius: 18px;
-
-    background:
-        #0d0d0d;
-}
-
-.checkout-box h1 {
-    margin-top: 0;
-
-    font-size: 40px;
-}
-
-.product-summary {
-    padding:
-        20px;
-
-    border:
-        1px solid #292929;
-
-    border-radius: 12px;
-
-    margin:
-        25px 0;
-}
-
-.product-summary strong {
-    font-size: 20px;
-}
-
-.product-summary span {
-    float: right;
-
-    color: #aaa;
-}
-
-.form-row {
-    margin-bottom: 20px;
-}
-
-.form-row label {
-    display: block;
-
-    margin-bottom: 8px;
-
-    color: #aaa;
-
-    font-size: 14px;
-}
-
-.form-row input {
-    width: 100%;
-
-    padding:
-        14px 15px;
-
-    background:
-        #080808;
-
-    color: white;
-
-    border:
-        1px solid #333;
-
-    border-radius: 8px;
-
-    outline: none;
-}
-
-.form-row input:focus {
-    border-color:
-        #777;
-}
-
-.checkout-info {
-    color: #666;
-
-    font-size: 12px;
-
-    line-height: 1.6;
-
-    margin-top: 20px;
-}
-
-
-/* ==========================================================
-   POTWIERDZENIE
-   ========================================================== */
-
-.success {
-    max-width: 700px;
-
-    min-height: 75vh;
-
-    margin: auto;
-
-    padding:
-        120px 25px;
-
-    text-align: center;
-}
-
-.success-icon {
-    width: 80px;
-
-    height: 80px;
-
-    margin:
-        0 auto 30px;
-
-    border:
-        1px solid #555;
-
-    border-radius: 50%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 35px;
-}
-
-.success h1 {
-    font-size: 50px;
-}
-
-.success p {
-    color: #888;
-
-    line-height: 1.8;
-}
-
-
-/* ==========================================================
-   FOOTER
-   ========================================================== */
-
 .footer {
     border-top:
         1px solid #222;
@@ -837,33 +592,24 @@ input {
         13px 0;
 }
 
-
-/* ==========================================================
-   MOBILE
-   ========================================================== */
-
 @media(max-width: 800px) {
 
     .hero {
         grid-template-columns: 1fr;
 
-        padding-top:
-            70px;
+        padding-top: 70px;
     }
 
     .cards {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .days {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .info-grid {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
     .nav-links {
@@ -888,13 +634,7 @@ input {
 
 </head>
 
-
 <body>
-
-
-<!-- ========================================================
-     NAWIGACJA
-     ======================================================== -->
 
 <nav class="navbar">
 
@@ -928,13 +668,7 @@ KUP
 
 </nav>
 
-
 {{ content|safe }}
-
-
-<!-- ========================================================
-     STOPKA
-     ======================================================== -->
 
 <footer class="footer">
 
@@ -951,7 +685,6 @@ Stworzone przez Marcel Chrzanowski i Marcel Okoń.
 </p>
 
 </footer>
-
 
 </body>
 
@@ -970,26 +703,22 @@ def home():
 
 <section class="hero">
 
-
 <div>
 
 <div class="small-label">
 E-BOOK • 7 DNI
 </div>
 
-
 <h1>
 NEW<br>
 LIFE
 </h1>
-
 
 <h2>
 Zbuduj odwagę.<br>
 Przestań się ukrywać.<br>
 Zacznij żyć.
 </h2>
-
 
 <p class="hero-description">
 
@@ -1000,7 +729,6 @@ i zacząć robić małe kroki w stronę zmian.
 
 </p>
 
-
 <div class="hero-buttons">
 
 <a href="#kup"
@@ -1009,7 +737,6 @@ class="button button-main">
 KUP E-BOOK
 
 </a>
-
 
 <a href="#o-ebooku"
 class="button button-dark">
@@ -1029,12 +756,10 @@ DOWIEDZ SIĘ WIĘCEJ
 E-BOOK • 7 DNI
 </div>
 
-
 <div class="cover-title">
 NEW<br>
 LIFE
 </div>
-
 
 <div class="cover-subtitle">
 
@@ -1044,7 +769,6 @@ Zacznij żyć.
 
 </div>
 
-
 <div class="cover-author">
 
 {AUTHOR.upper()}
@@ -1053,17 +777,11 @@ Zacznij żyć.
 
 </div>
 
-
 </section>
 
 
-<!-- ========================================================
-     O E-BOOKU
-     ======================================================== -->
-
 <section class="section"
 id="o-ebooku">
-
 
 <div class="section-header">
 
@@ -1071,11 +789,9 @@ id="o-ebooku">
 O E-BOOKU
 </div>
 
-
 <h2>
 Zacznij od jednego kroku.
 </h2>
-
 
 <p>
 
@@ -1087,9 +803,7 @@ działaniu i budowaniu własnej drogi.
 
 </div>
 
-
 <div class="cards">
-
 
 <div class="card">
 
@@ -1153,19 +867,13 @@ podejmować kolejne decyzje.
 
 </div>
 
-
 </div>
 
 </section>
 
 
-<!-- ========================================================
-     7 DNI
-     ======================================================== -->
-
 <section class="section"
 id="dni">
-
 
 <div class="section-header">
 
@@ -1173,11 +881,9 @@ id="dni">
 ZAWARTOŚĆ
 </div>
 
-
 <h2>
 7 dni. 7 kroków.
 </h2>
-
 
 <p>
 
@@ -1188,157 +894,62 @@ elemencie drogi.
 
 </div>
 
-
 <div class="days">
 
+<div class="day">
+<div class="day-number">DZIEŃ 01</div>
+<h3>Podejmij decyzję</h3>
+<p>Ten moment, kiedy masz już dość.</p>
+</div>
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 01
+<div class="day-number">DZIEŃ 02</div>
+<h3>Wyjdź poza swoje cztery ściany</h3>
+<p>Wyjdź z miejsca, w którym się ukrywasz.</p>
 </div>
-
-<h3>
-Podejmij decyzję
-</h3>
-
-<p>
-Ten moment, kiedy masz już dość.
-</p>
-
-</div>
-
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 02
+<div class="day-number">DZIEŃ 03</div>
+<h3>Przestań żyć pod spojrzeniem innych</h3>
+<p>Nie musisz cały czas przejmować się opinią innych.</p>
 </div>
-
-<h3>
-Wyjdź poza swoje cztery ściany
-</h3>
-
-<p>
-Wyjdź z miejsca, w którym się ukrywasz.
-</p>
-
-</div>
-
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 03
+<div class="day-number">DZIEŃ 04</div>
+<h3>Zrób coś, czego wcześniej się bałeś</h3>
+<p>Odwaga zaczyna się od działania.</p>
 </div>
-
-<h3>
-Przestań żyć pod spojrzeniem innych
-</h3>
-
-<p>
-Nie musisz cały czas przejmować się opinią innych.
-</p>
-
-</div>
-
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 04
+<div class="day-number">DZIEŃ 05</div>
+<h3>Zacznij budować pewność siebie</h3>
+<p>Pewność siebie buduje się krok po kroku.</p>
 </div>
-
-<h3>
-Zrób coś, czego wcześniej się bałeś
-</h3>
-
-<p>
-Odwaga zaczyna się od działania.
-</p>
-
-</div>
-
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 05
+<div class="day-number">DZIEŃ 06</div>
+<h3>Naucz się działać mimo gorszych dni</h3>
+<p>Nie każdy dzień musi być idealny.</p>
 </div>
-
-<h3>
-Zacznij budować pewność siebie
-</h3>
-
-<p>
-Pewność siebie buduje się krok po kroku.
-</p>
-
-</div>
-
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 06
+<div class="day-number">DZIEŃ 07</div>
+<h3>Twoje nowe życie zaczyna się teraz</h3>
+<p>To dopiero początek.</p>
 </div>
-
-<h3>
-Naucz się działać mimo gorszych dni
-</h3>
-
-<p>
-Nie każdy dzień musi być idealny.
-</p>
-
-</div>
-
 
 <div class="day">
-
-<div class="day-number">
-DZIEŃ 07
+<div class="day-number">KONIEC</div>
+<h3>Nie wracaj do życia, które Cię ograniczało</h3>
+<p>Zakończenie całej drogi.</p>
 </div>
-
-<h3>
-Twoje nowe życie zaczyna się teraz
-</h3>
-
-<p>
-To dopiero początek.
-</p>
-
-</div>
-
-
-<div class="day">
-
-<div class="day-number">
-KONIEC
-</div>
-
-<h3>
-Nie wracaj do życia, które Cię ograniczało
-</h3>
-
-<p>
-Zakończenie całej drogi.
-</p>
-
-</div>
-
 
 </div>
 
 </section>
 
 
-<!-- ========================================================
-     DLA KOGO
-     ======================================================== -->
-
 <section class="section">
-
 
 <div class="section-header">
 
@@ -1346,11 +957,9 @@ Zakończenie całej drogi.
 DLA CIEBIE
 </div>
 
-
 <h2>
 Małe kroki. Własne tempo.
 </h2>
-
 
 <p>
 
@@ -1361,9 +970,7 @@ Najważniejsze jest rozpoczęcie.
 
 </div>
 
-
 <div class="info-grid">
-
 
 <div class="info-box">
 
@@ -1383,7 +990,6 @@ i działania.
 
 </div>
 
-
 <div class="info-box">
 
 <h3>
@@ -1401,37 +1007,27 @@ tempie.
 
 </div>
 
-
 </div>
 
 </section>
 
 
-<!-- ========================================================
-     CENA
-     ======================================================== -->
-
 <section class="buy-section"
 id="kup">
 
-
 <div class="buy-box">
-
 
 <div class="small-label">
 NEW LIFE • E-BOOK
 </div>
 
-
 <h2>
 Twój pierwszy krok
 </h2>
 
-
 <div class="price">
 {PRODUCT_PRICE}
 </div>
-
 
 <p class="buy-description">
 
@@ -1439,34 +1035,26 @@ Twój pierwszy krok
 
 </p>
 
-
-<a href="/zamowienie"
+<a href="{PAYHIP_URL}"
 class="button button-main">
 
 KUP E-BOOK
 
 </a>
 
-
 <div class="buy-note">
 
-Produkt cyfrowy • PDF
+Produkt cyfrowy • PDF • Płatność przez Payhip
 
 </div>
-
 
 </div>
 
 </section>
 
 
-<!-- ========================================================
-     FAQ
-     ======================================================== -->
-
 <section class="section"
 id="faq">
-
 
 <div class="section-header">
 
@@ -1474,16 +1062,13 @@ id="faq">
 FAQ
 </div>
 
-
 <h2>
 Najczęstsze pytania
 </h2>
 
 </div>
 
-
 <div class="faq">
-
 
 <div class="faq-item">
 
@@ -1543,8 +1128,8 @@ W jakim formacie będzie e-book?
 
 <p>
 
-Docelowo e-book może być
-udostępniany jako plik PDF.
+NEW LIFE jest dostępny jako
+plik PDF.
 
 </p>
 
@@ -1554,38 +1139,32 @@ udostępniany jako plik PDF.
 <div class="faq-item">
 
 <h3>
-Czy płatność działa już teraz?
+Jak wygląda zakup?
 </h3>
 
 <p>
 
-Strona jest przygotowana pod
-podłączenie prawdziwego operatora
-płatności. Sam formularz na tej
-wersji nie pobiera pieniędzy.
+Po kliknięciu przycisku KUP E-BOOK
+przechodzisz do strony Payhip,
+gdzie możesz dokonać zakupu.
+Po udanej płatności Payhip obsługuje
+dostarczenie produktu cyfrowego.
 
 </p>
 
 </div>
-
 
 </div>
 
 </section>
 
 
-<!-- ========================================================
-     OSTATNIE CTA
-     ======================================================== -->
-
 <section class="section"
 style="text-align:center;">
-
 
 <div class="small-label">
 NEW LIFE
 </div>
-
 
 <h2 style="
 font-size:clamp(45px,7vw,80px);
@@ -1595,7 +1174,6 @@ margin:0 0 25px;
 Zacznij od siebie.
 
 </h2>
-
 
 <p style="
 color:#888;
@@ -1611,12 +1189,11 @@ Zacznij żyć.
 
 </p>
 
-
 <div style="
 margin-top:35px;
 ">
 
-<a href="#kup"
+<a href="{PAYHIP_URL}"
 class="button button-main">
 
 KUP E-BOOK
@@ -1625,270 +1202,13 @@ KUP E-BOOK
 
 </div>
 
-
 </section>
 
 """
-
 
     return render_template_string(
         PAGE,
         title="E-book",
-        content=content
-    )
-
-
-# ============================================================
-# STRONA ZAMÓWIENIA
-# ============================================================
-
-@app.route("/zamowienie")
-def order():
-
-    content = f"""
-
-<section class="checkout">
-
-
-<div class="checkout-box">
-
-
-<div class="small-label">
-NEW LIFE
-</div>
-
-
-<h1>
-Zamów e-book
-</h1>
-
-
-<p style="color:#888;line-height:1.7;">
-
-Uzupełnij dane, aby przygotować
-zamówienie.
-
-</p>
-
-
-<div class="product-summary">
-
-<strong>
-{PRODUCT_NAME}
-</strong>
-
-<span>
-{PRODUCT_PRICE}
-</span>
-
-<div style="clear:both;"></div>
-
-<p style="
-color:#777;
-margin-bottom:0;
-">
-
-E-book cyfrowy • PDF
-
-</p>
-
-</div>
-
-
-<form method="POST"
-action="/platnosc">
-
-
-<div class="form-row">
-
-<label>
-Imię
-</label>
-
-<input
-type="text"
-name="name"
-placeholder="Twoje imię"
-required
->
-
-</div>
-
-
-<div class="form-row">
-
-<label>
-Adres e-mail
-</label>
-
-<input
-type="email"
-name="email"
-placeholder="twoj@email.pl"
-required
->
-
-</div>
-
-
-<button
-type="submit"
-class="button button-main"
-style="width:100%;">
-
-PRZEJDŹ DO PŁATNOŚCI
-
-</button>
-
-
-</form>
-
-
-<p class="checkout-info">
-
-Na tym etapie strona jest przygotowana
-technicznie pod płatności. Aby rzeczywiście
-pobierać pieniądze, trzeba podłączyć
-operatora płatności i odpowiednio
-skonfigurować sprzedaż.
-
-</p>
-
-
-<br>
-
-
-<a href="/"
-class="button button-dark">
-
-← WRÓĆ DO STRONY
-
-</a>
-
-
-</div>
-
-</section>
-
-"""
-
-
-    return render_template_string(
-        PAGE,
-        title="Zamówienie",
-        content=content
-    )
-
-
-# ============================================================
-# STRONA PŁATNOŚCI
-# ============================================================
-
-@app.route("/platnosc", methods=["POST"])
-def payment():
-
-    name = request.form.get("name", "")
-    email = request.form.get("email", "")
-
-    content = f"""
-
-<section class="checkout">
-
-
-<div class="checkout-box">
-
-
-<div class="small-label">
-KROK 2
-</div>
-
-
-<h1>
-Płatność
-</h1>
-
-
-<p style="
-color:#888;
-line-height:1.8;
-">
-
-Cześć {name}! Twoje zamówienie
-zostało przygotowane.
-
-</p>
-
-
-<div class="product-summary">
-
-<strong>
-{PRODUCT_NAME}
-</strong>
-
-<span>
-{PRODUCT_PRICE}
-</span>
-
-<div style="clear:both;"></div>
-
-<p style="
-color:#777;
-margin-bottom:0;
-">
-
-E-book cyfrowy • PDF
-
-</p>
-
-</div>
-
-
-<div style="
-padding:25px;
-border:1px solid #292929;
-border-radius:12px;
-background:#080808;
-margin-bottom:25px;
-">
-
-<h3 style="margin-top:0;">
-Płatność nie jest jeszcze podłączona
-</h3>
-
-<p style="
-color:#888;
-line-height:1.7;
-">
-
-To miejsce jest przygotowane na
-prawdziwy system płatności.
-
-Po podłączeniu operatora klient będzie
-mógł tutaj zapłacić za e-book.
-
-</p>
-
-</div>
-
-
-<a href="/"
-class="button button-main">
-
-WRÓĆ DO SKLEPU
-
-</a>
-
-
-</div>
-
-</section>
-
-"""
-
-
-    return render_template_string(
-        PAGE,
-        title="Płatność",
         content=content
     )
 
@@ -1902,5 +1222,3 @@ if __name__ == "__main__":
         debug=True,
         port=5001
     )
-
-
